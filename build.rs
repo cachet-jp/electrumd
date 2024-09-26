@@ -7,11 +7,15 @@ use std::str::FromStr;
 
 include!("src/versions.rs");
 
-#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
 fn download_filename() -> String {
-    format!("electrum-{}-x86_64.AppImage", &VERSION)
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) {
+        format!("electrum-{}-x86_64.AppImage", &VERSION)
+    } else {
+        // other platforms are currently unsupported
+        panic!()
+    }
 }
-// other platforms are currently unsupported
+
 
 fn get_expected_sha256() -> Result<sha256::Hash, ()> {
     let sha256sum_filename = format!("sha256/electrum-{}-SHA256SUM", &VERSION);
